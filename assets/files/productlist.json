@@ -1,0 +1,95 @@
+{
+    "data":
+    [    
+        {
+            "id": 1,
+            "name": "Iphone 1",
+            "price": 2100000,
+            "img": "iphone_1.png",
+            "des": "Màu đen",
+            "catId": 1,
+            "catName":"Iphone"      
+        },
+        {
+            "id": 2,
+            "name": "Iphone 2",
+            "price": 2100000,
+            "img": "iphone_2.png",
+            "des": "Màu xanh",
+            "catId": 1 ,
+            "catName":"Iphone"      
+        },
+        {
+            "id": 3,
+            "name": "Iphone 3",
+            "price": 2100000,
+            "img": "iphone_3.png",
+            "des": "Màu hồng",
+            "catId": 1 ,
+            "catName":"Iphone"      
+        },
+        {
+            "id": 4,
+            "name": "Iphone 24",
+            "price": 2100000,
+            "img": "iphone_4.png",
+            "des": "Màu xám",
+            "catId": 1 ,
+            "catName":"Iphone"      
+        },
+        {
+            "id": 5,
+            "name": "Iphone 5",
+            "price": 2100000,
+            "img": "iphone_5.png",
+            "des": "Màu trắng",
+            "catId": 1 ,
+            "catName":"Iphone"      
+        },
+        {
+            "id": 6,
+            "name": "Samsung 01",
+            "price": 2100000,
+            "img": "samsung_1.png",
+            "des": "Samsung",
+            "catId": 2 ,
+            "catName":"Samsung"  
+        },
+        {
+            "id": 7,
+            "name": "Samsung 02",
+            "price": 2100000,
+            "img": "samsung_2.png",
+            "des": "Samsung",
+            "catId": 2  ,
+            "catName":"Samsung"  
+        },
+        {
+            "id": 8,
+            "name": "Samsung 03",
+            "price": 2100000,
+            "img": "samsung_3.png",
+            "des": "Samsung",
+            "catId": 2  ,
+            "catName":"Samsung"  
+        },
+        {
+            "id": 9,
+            "name": "Samsung 04",
+            "price": 2100000,
+            "img": "samsung_4.png",
+            "des": "Samsung",
+            "catId": 2  ,
+            "catName":"Samsung"  
+        },
+        {
+            "id": 10,
+            "name": "Samsung 05",
+            "price": 2100000,
+            "img": "samsung_5.png",
+            "des": "Samsung",
+            "catId": 2  ,
+            "catName":"Samsung"  
+        }
+    ]
+}
