@@ -13,6 +13,7 @@ class ProductCart extends StatefulWidget {
 }
 
 class _ProductCartState extends State<ProductCart> {
+  int totalQuantity = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +35,7 @@ class _ProductCartState extends State<ProductCart> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -45,16 +46,16 @@ class _ProductCartState extends State<ProductCart> {
                           height: 80,
                           width: 80,
                           errorBuilder: (context, error, stackTrace) =>
-                              Icon(Icons.image),
+                              const Icon(Icons.image),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 value.lst[index].name ?? '',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -63,14 +64,14 @@ class _ProductCartState extends State<ProductCart> {
                               Text(
                                 NumberFormat('###,###.###')
                                     .format(value.lst[index].price),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 15,
                                   color: Colors.red,
                                 ),
                               ),
                               Text(
                                 value.lst[index].des!,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 13,
                                   color: Colors.grey,
                                 ),
@@ -84,12 +85,12 @@ class _ProductCartState extends State<ProductCart> {
                               onPressed: () {
                                 value.incrementItemQuantity(value.lst[index]);
                               },
-                              icon: Icon(Icons.add),
+                              icon: const Icon(Icons.add),
                               color: Colors.teal,
                             ),
                             Text(
                               '${value.lst[index].quantity}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -98,7 +99,7 @@ class _ProductCartState extends State<ProductCart> {
                               onPressed: () {
                                 value.decrementItemQuantity(value.lst[index]);
                               },
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                               color: Colors.teal,
                             ),
                             ElevatedButton(
@@ -106,9 +107,9 @@ class _ProductCartState extends State<ProductCart> {
                                 value.removeItem(value.lst[index]);
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.red, // Màu nền của nút
+                                backgroundColor: Colors.red, // Màu nền của nút
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.delete,
                                 color: Colors.white,
                               ),
@@ -131,7 +132,7 @@ class _ProductCartState extends State<ProductCart> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Tổng tiền: ',
                       style: TextStyle(
                         fontSize: 18,
@@ -139,8 +140,8 @@ class _ProductCartState extends State<ProductCart> {
                       ),
                     ),
                     Text(
-                      '${calculateTotal(context)}', // Tính tổng tiền
-                      style: TextStyle(
+                      calculateTotal(context), // Tính tổng tiền
+                      style: const TextStyle(
                         fontSize: 18,
                         color: Colors.red,
                         fontWeight: FontWeight.bold,
@@ -148,7 +149,7 @@ class _ProductCartState extends State<ProductCart> {
                     ),
                   ],
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -158,27 +159,36 @@ class _ProductCartState extends State<ProductCart> {
                         Provider.of<ProductsVM>(context, listen: false)
                             .clearAllItems();
                       },
-                      child: Text(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Colors.red, // Màu nền của nút "Xóa tất cả"
+                      ),
+                      child: const Text(
                         'Xóa tất cả',
                         style: TextStyle(color: Colors.white),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.red, // Màu nền của nút "Xóa tất cả"
-                      ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 15,
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // Thanh toán
+                        // Thực hiện thanh toán
+                        _performPayment(context);
                       },
-                      child: Text(
-                        'Thanh toán',
-                        style: TextStyle(color: Colors.white),
-                      ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.teal, // Màu nền của nút "Thanh toán"
+                        backgroundColor:
+                            Colors.teal, // Màu nền của nút "Thanh toán"
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.shopping_cart, color: Colors.white),
+                          const SizedBox(width: 10),
+                          Text(
+                            'Đặt hàng ($totalQuantity)', // Hiển thị số lượng sản phẩm
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -197,5 +207,69 @@ class _ProductCartState extends State<ProductCart> {
       total += (product.price ?? 0) * (product.quantity ?? 0);
     }
     return NumberFormat('###,###.###').format(total);
+  }
+
+  void _performPayment(BuildContext context) {
+    // Thực hiện thanh toán ở đây
+
+    // Hiển thị thông báo thanh toán thành công
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          backgroundColor: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.check_circle,
+                  color: Colors.teal,
+                  size: 50,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Đặt hàng thành công",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Cảm ơn bạn đã đặt hàng.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Đóng hộp thoại
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
