@@ -6,8 +6,10 @@ import 'package:provider_app/data/model/product_viewmodel.dart';
 import 'package:provider_app/data/model/productmodel.dart';
 
 Widget itemGridView(ProductModel productModel) {
+  bool isFavorite = false;
+
   return Container(
-    margin: EdgeInsets.all(5),
+    margin: const EdgeInsets.all(5),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(15.0),
@@ -16,61 +18,132 @@ Widget itemGridView(ProductModel productModel) {
           color: Colors.grey.withOpacity(0.3),
           spreadRadius: 2,
           blurRadius: 5,
-          offset: Offset(0, 3),
+          offset: const Offset(0, 3),
         ),
       ],
     ),
-    child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Image.asset(
-          urlProductImg + productModel.img!,
-          height: 100,
-          errorBuilder: (context, error, stackTrace) => const Icon(Icons.image),
+    child: Stack(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Image.asset(
+                urlProductImg + productModel.img!,
+                height: 100,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.image),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              productModel.name ?? '',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              NumberFormat('###,###.###').format(productModel.price),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+              ),
+            ),
+            const SizedBox(height: 15),
+            Consumer<ProductsVM>(
+              builder: (context, value, child) => ElevatedButton(
+                onPressed: () {
+                  value.add(productModel);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal, // Màu nền của button
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(
+                        15.0,
+                      ), // Chỉ áp dụng border cho 2 góc dưới của button
+                    ),
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add,
+                        color: Colors.white,
+                        size: 24,
+                      ), // Icon "Add"
+                      SizedBox(width: 8),
+                      Text(
+                        'Add',
+                        style: TextStyle(color: Colors.white),
+                      ), // Text "Add"
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-      SizedBox(height: 8),
-      Text(
-        productModel.name ?? '',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      SizedBox(height: 5),
-      Text(
-        NumberFormat('###,###.###').format(productModel.price),
-        textAlign: TextAlign.center,
-        style: TextStyle(
-            fontSize: 14, fontWeight: FontWeight.bold, color: Colors.red),
-      ),
-      SizedBox(height: 20),
-      Consumer<ProductsVM>(
-        builder: (context, value, child) => ElevatedButton(
-          onPressed: () {
-            value.add(productModel);
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Colors.teal, // Màu nền của button
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(
-                    15.0), // Chỉ áp dụng border cho 2 góc dưới của button
+        Positioned(
+          top: 0,
+          left: 0,
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 244, 222, 54),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
+              ),
+            ),
+            child: const Text(
+              '15%',
+              style: TextStyle(
+                color: Color.fromARGB(255, 26, 25, 25),
+                fontSize: 12,
               ),
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.add, color: Colors.white, size: 24), // Icon "Add"
-                SizedBox(width: 8),
-                Text('Add',
-                    style: TextStyle(color: Colors.white)), // Text "Add"
-              ],
-            ),
-          ),
         ),
-      ),
-    ]),
+        const Positioned(
+          top: 0,
+          right: 0,
+          child: FavoriteButton(), // Sử dụng FavoriteButton ở đây
+        ),
+      ],
+    ),
   );
+}
+
+class FavoriteButton extends StatefulWidget {
+  const FavoriteButton({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _FavoriteButtonState createState() => _FavoriteButtonState();
+}
+
+class _FavoriteButtonState extends State<FavoriteButton> {
+  bool _isFavorite = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          _isFavorite = !_isFavorite;
+        });
+      },
+      icon: Icon(
+        _isFavorite ? Icons.favorite : Icons.favorite_border,
+        color: _isFavorite ? Colors.red : Colors.grey,
+      ),
+    );
+  }
 }
